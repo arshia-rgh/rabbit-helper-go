@@ -1,6 +1,7 @@
 package rabbit_helper
 
 import (
+	"encoding/json"
 	"github.com/rabbitmq/amqp091-go"
 	"log"
 	"math"
@@ -77,7 +78,7 @@ func (rabbit *Rabbit) queueDeclare(routingKey string) error {
 	return err
 }
 
-func (rabbit *Rabbit) Consume(routingKey string) error {
+func (rabbit *Rabbit) Consume(routingKey string, callback func(data any)) error {
 	err := rabbit.queueDeclare(routingKey)
 	if err != nil {
 		return err
@@ -99,6 +100,20 @@ func (rabbit *Rabbit) Consume(routingKey string) error {
 			continue
 		}
 		log.Printf("waiting for messages in queue: %v", routingKey)
+		go func() {
+			for msg := range msgs {
+				log.Printf("recieved a message: %v", msg.Body)
+
+				var data any
+				err := json.Unmarshal(msg.Body, &data)
+				if err != nil {
+					log.Println("error unmarshalling message:", err)
+					continue
+				}
+
+				go callback(msg)
+			}
+		}()
 
 	}
 }
