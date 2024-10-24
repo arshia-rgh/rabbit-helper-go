@@ -149,3 +149,13 @@ func (rabbit *Rabbit) Publish(routingKey string, data any) error {
 	return nil
 
 }
+
+func (rabbit *Rabbit) Close() {
+	if rabbit.Channel != nil {
+		rabbit.Channel.Close()
+	}
+
+	if rabbit.Connection != nil {
+		rabbit.Connection.Close()
+	}
+}
