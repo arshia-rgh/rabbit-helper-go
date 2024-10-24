@@ -96,7 +96,7 @@ func (rabbit *Rabbit) Consume(routingKey string, callback func(data any)) error 
 		)
 
 		if err != nil {
-			log.Println(err)
+			log.Printf("error consuming message: %v", err)
 			continue
 		}
 		log.Printf("waiting for messages in queue: %v", routingKey)
