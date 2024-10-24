@@ -7,3 +7,7 @@ type Rabbit struct {
 	Connection *amqp091.Connection
 	Channel    *amqp091.Channel
 }
+
+func (rabbit *Rabbit) Connect(rabbitUrl string) (Rabbit, error) {
+
+}
