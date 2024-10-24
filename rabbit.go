@@ -65,6 +65,18 @@ func (rabbit *Rabbit) connect() error {
 	return nil
 }
 
+func (rabbit *Rabbit) queueDeclare(routingKey string) error {
+	_, err := rabbit.Channel.QueueDeclare(
+		routingKey,
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+	return err
+}
+
 func (rabbit *Rabbit) Consume(routingKey string) {
 
 }
