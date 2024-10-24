@@ -77,8 +77,30 @@ func (rabbit *Rabbit) queueDeclare(routingKey string) error {
 	return err
 }
 
-func (rabbit *Rabbit) Consume(routingKey string) {
+func (rabbit *Rabbit) Consume(routingKey string) error {
+	err := rabbit.queueDeclare(routingKey)
+	if err != nil {
+		return err
+	}
 
+	for {
+		msgs, err := rabbit.Channel.Consume(
+			routingKey,
+			"",
+			true,
+			false,
+			false,
+			false,
+			nil,
+		)
+
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		log.Printf("waiting for messages in queue: %v", routingKey)
+
+	}
 }
 
 func (rabbit *Rabbit) Publish(routingKey string, data map[string]any) {
