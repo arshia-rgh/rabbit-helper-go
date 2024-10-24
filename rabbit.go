@@ -52,3 +52,11 @@ func (rabbit *Rabbit) Connect(rabbitUrl string) error {
 	rabbit.Channel = channel
 	return nil
 }
+
+func (rabbit *Rabbit) Consume(routingKey string) {
+
+}
+
+func (rabbit *Rabbit) Publish(routingKey string, data map[string]any) {
+
+}
