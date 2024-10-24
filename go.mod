@@ -1,4 +1,4 @@
-module github.com/arshia-rgh/rabbit-helper
+module github.com/arshia-rgh/rabbit-helper-go
 
 go 1.22.2
 
