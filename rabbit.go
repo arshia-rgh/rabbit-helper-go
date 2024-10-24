@@ -13,14 +13,26 @@ type Rabbit struct {
 	Channel    *amqp091.Channel
 }
 
-func (rabbit *Rabbit) Connect(rabbitUrl string) error {
+func New(rabbitUrl string) *Rabbit {
+	var rabbit = &Rabbit{RabbitUrl: rabbitUrl}
+	err := rabbit.connect()
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return rabbit
+
+}
+
+func (rabbit *Rabbit) connect() error {
 	var connection *amqp091.Connection
 	var channel *amqp091.Channel
 	var counts int64
 	var backOff = 1 * time.Second
 
 	for {
-		c, err := amqp091.Dial(rabbitUrl)
+		c, err := amqp091.Dial(rabbit.RabbitUrl)
 		if err != nil {
 			log.Println("rabbitmq not yet ready...!")
 			counts++
