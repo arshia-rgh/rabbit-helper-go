@@ -100,20 +100,19 @@ func (rabbit *Rabbit) Consume(routingKey string, callback func(data any)) error 
 			continue
 		}
 		log.Printf("waiting for messages in queue: %v", routingKey)
-		go func() {
-			for msg := range msgs {
-				log.Printf("recieved a message: %v", msg.Body)
 
-				var data any
-				err := json.Unmarshal(msg.Body, &data)
-				if err != nil {
-					log.Println("error unmarshalling message:", err)
-					continue
-				}
+		for msg := range msgs {
+			log.Printf("recieved a message: %v", msg.Body)
 
-				go callback(msg)
+			var data any
+			err := json.Unmarshal(msg.Body, &data)
+			if err != nil {
+				log.Println("error unmarshalling message:", err)
+				continue
 			}
-		}()
+
+			go callback(msg)
+		}
 
 	}
 }
