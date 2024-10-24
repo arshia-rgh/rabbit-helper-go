@@ -118,6 +118,34 @@ func (rabbit *Rabbit) Consume(routingKey string, callback func(data any)) error 
 	}
 }
 
-func (rabbit *Rabbit) Publish(routingKey string, data map[string]any) {
+func (rabbit *Rabbit) Publish(routingKey string, data any) error {
+	err := rabbit.queueDeclare(routingKey)
+	if err != nil {
+		return err
+	}
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	err = rabbit.Channel.Publish(
+		"",
+		routingKey,
+		false,
+		false,
+		amqp091.Publishing{
+			ContentType: "application/json",
+			Body:        jsonData,
+		},
+	)
+	if err != nil {
+		log.Println("error publishing message: ", err)
+		return err
+	}
+
+	log.Printf("published message from queue: %v msg: %v \n", routingKey, jsonData)
+
+	return nil
 
 }
