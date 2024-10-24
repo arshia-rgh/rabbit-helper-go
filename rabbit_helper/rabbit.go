@@ -78,7 +78,7 @@ func (rabbit *Rabbit) queueDeclare(routingKey string) error {
 	return err
 }
 
-func (rabbit *Rabbit) Consume(routingKey string, callback func(data any)) error {
+func (rabbit *Rabbit) Consume(routingKey string, callback func(data map[string]any)) error {
 	err := rabbit.queueDeclare(routingKey)
 	if err != nil {
 		return err
@@ -104,7 +104,7 @@ func (rabbit *Rabbit) Consume(routingKey string, callback func(data any)) error 
 		for msg := range msgs {
 			log.Printf("recieved a message: %v", msg.Body)
 
-			var data any
+			var data map[string]any
 			err := json.Unmarshal(msg.Body, &data)
 			if err != nil {
 				log.Println("error unmarshalling message:", err)
