@@ -111,7 +111,7 @@ func (rabbit *Rabbit) Consume(routingKey string, callback func(data any)) error 
 				continue
 			}
 
-			go callback(msg)
+			go callback(data)
 		}
 
 	}
