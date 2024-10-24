@@ -102,7 +102,6 @@ func (rabbit *Rabbit) Consume(routingKey string, callback func(data map[string]a
 		log.Printf("waiting for messages in queue: %v", routingKey)
 
 		for msg := range msgs {
-			log.Printf("recieved a message: %v", msg.Body)
 
 			var data map[string]any
 			err := json.Unmarshal(msg.Body, &data)
@@ -110,6 +109,7 @@ func (rabbit *Rabbit) Consume(routingKey string, callback func(data map[string]a
 				log.Println("error unmarshalling message:", err)
 				continue
 			}
+			log.Printf("recieved a message: %v", data)
 
 			go callback(data)
 		}
